@@ -1,71 +1,92 @@
+/The Main class is gathering the data made by the abstract class and inherited classes of it.
+public class Main {
+    public static void main(String[] args) {
+        Container containerVessel = new Container(50, "Container Vessel");
+        Tanker tankerVessel = new Tanker(4, "Tanker Vessel");
+        RoRo roRoVessel = new RoRo(8, "RoRo Vessel");
 
-//Portfolio 1:
-//3. Implement classes to represent these vessels
+        containerVessel.loadingCargo(50, "TEU");
+        containerVessel.loadingFraction();
+        tankerVessel.loadingCargo("4");
+        tankerVessel.loadingFraction();
+        roRoVessel.loadingCargo("car");
+        roRoVessel.loadingFraction();
+    }
+    //Abstract class "Vessels" start. Abstract because it's only function is to be inherited from.
+    abstract static class Vessels {
+        int cargo;
+        String nameOfVessel;
+
+        public Vessels(int cargo, String nameOfVessel) {
+            this.nameOfVessel = nameOfVessel;
+            this.cargo = cargo;
+        }
+
+        abstract float loadingFraction();
+    }
+
+    //Container class starts, inherited from abstract class "Vessels"
+
+    static class Container extends Vessels {
+        float numberOfContainers;
+        float fraction;
+
+        public Container(int cargo, String nameOfVessel) {
+            super(cargo, nameOfVessel);
+        }
+
+        public void loadingCargo(int containers, String letters) {
+            this.numberOfContainers = containers;
+
+        }
+
+        // calculate percentage filled (x/y)*100
+        public float loadingFraction() {
+            this.fraction = (this.numberOfContainers / cargo) * 100;
+            return fraction;
+        }
+    }
+    //Tanker class starts, inherited from abstract class "Vessels"
+    static class Tanker extends Vessels {
+        float fraction;
+        float numberOfCompartments = 10;
+        float filledCompartmentsDouble = 4;
+
+        public Tanker(int cargo, String nameOfVessel) {
+            super(cargo, nameOfVessel);
+        }
+
+        void loadingCargo(String filledCompartmentsString) {
+            filledCompartmentsString = filledCompartmentsDouble + "";
+
+        }
+
+        public float loadingFraction() {
+            this.fraction = (this.numberOfCompartments / cargo) * 100;
+            return fraction;
+        }
+    }
+    //RoRo class starts, inherited from abstract class "Vessels"
+    static class RoRo extends Vessels {
+        float laneMeters = 50;
+        float fraction;
+        String car = "car";
+
+        public RoRo(int cargo, String nameOfVessel) {
+            super(cargo, nameOfVessel);
+        }
+
+        public void loadingCargo(String typeVehicle) {
+            this.car = typeVehicle;
+
+        }
+
+        public float loadingFraction() {
+            this.fraction = (this.laneMeters / cargo) * 100;
+            return fraction;
+        }
+
+    }
+}
 
 
-//first off, I am making an abstract class called "Vessels", so I'm able to call this class into specific vessel types
-Abstract class Vessels{
-  String flagNation;
-  int draft;
-  int length;
-  int width; 
-  int cargo; 
-
-//I am using "this" keyword to call the upper String and int's 
-  public void Vessels(String flagNation, int draft, int length, int width, int cargo){
-    this.flagNation = flagNation; 
-    this.draft = draft; 
-    this.length = length; 
-    this width = width; 
-    this.cargo = cargo; 
-   }
- 
- //Use utilitylevelofCapacity(); method in a way
- 
- 
- //I am extending the container vessel from abstract class "Vessels". 
- //What is making the container vessel stand out is it's ability to carry a specific number of containers 
- 
- Public class Containers extends Vessels {
-  int specnumofcontainers;
-  double fraction; 
-  
-  
- //As containers I extend tankers from "Vessels". 
- //The tankers have 1-10 compartments, each with a capacity that can be filled up to a certain level
- 
- Public class Tankers extends Vessels {
-  int numberofCompartments;
-  double fraction
-  
- //RoRo vessels also extends "Vessels" abstract class. 
- //The RoRo vessels special quality is that it has a total amount of lane meters and carry cars and trucks. 
- 
- int lenghtofacarM = 8:
- int lengthofatruckM = 30;
- int laneMeters:
- double fraction; 
- 
- 
- public class Main{
-    public static void String args[]){
-    
-      System.out.println("Calculation for containers");
-      
-      
-      
-      
-      
-      
-      System.out.println("Calculations for tankers");
-      
-      
-      
-      
-      
-      
-      System.out.println("Calculations for RoRo");
- 
- 
- 
-    
