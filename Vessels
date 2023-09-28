@@ -50,14 +50,14 @@ public class Main {
     static class Tanker extends Vessels {
         float fraction;
         float numberOfCompartments = 10;
-        float filledCompartmentsDouble = 4;
+        float filledCompartmentsFloat = 4;
 
         public Tanker(int cargo, String nameOfVessel) {
             super(cargo, nameOfVessel);
         }
 
         void loadingCargo(String filledCompartmentsString) {
-            filledCompartmentsString = filledCompartmentsDouble + "";
+            filledCompartmentsString = filledCompartmentsFloat + "";
 
         }
 
