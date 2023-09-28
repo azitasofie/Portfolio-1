@@ -1,4 +1,4 @@
-/The Main class is gathering the data made by the abstract class and inherited classes of it.
+//The Main class is gathering the data made by the abstract class and inherited classes of it.
 public class Main {
     public static void main(String[] args) {
         Container containerVessel = new Container(50, "Container Vessel");
