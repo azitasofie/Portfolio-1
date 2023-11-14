@@ -51,9 +51,7 @@ class Tanker extends Vessel {
         try {
             // Tries to convert the string compartment number into an integer.
             int compartmentNumber = Integer.parseInt(compartment);
-            // Checks if the number is within the range of compartments.
             if (compartmentNumber >= 1 && compartmentNumber <= compartments.length) {
-                // Loads cargo into the compartment, but not more than its capacity.
                 compartments[compartmentNumber - 1] = Math.min(amount, capacityPerCompartment);
             } else {
                 // If the compartment number is out of range, prints an error message.
@@ -69,7 +67,7 @@ class Tanker extends Vessel {
     public float loadingFraction() {
         float total = 0;
         for (int i = 0; i < compartments.length; i++) {
-            total += compartments[i]; // Adds up the filled capacity of each compartment.
+            total += compartments[i];
         }
         return total / this.capacity; // Divides the total filled capacity by the tanker's total capacity.
     }
@@ -78,7 +76,7 @@ class Tanker extends Vessel {
 class RoRo extends Vessel {
     private int laneMetersOccupied; // Keeps track of how many lane meters are occupied.
 
-    // Constructor for RoRo. Sets the lane meters occupied to 0 initially.
+    // Constructor for RoRo. 
     public RoRo(String name, int totalLaneMeters) {
         super(name, totalLaneMeters);
         laneMetersOccupied = 0; // Starts with no lane meters occupied.
@@ -93,7 +91,7 @@ class RoRo extends Vessel {
         } else if ("truck".equals(type)) {
             vehicleLength = 30; // A truck occupies 30 meters of lane space.
         } else {
-            vehicleLength = 0; // If the type is unknown, it assumes no space is occupied.
+            vehicleLength = 0; // If the type is unknown, it assumes that the vehicle length is equal to zero.
         }
 
         // Adds the total length of vehicles being loaded to laneMetersOccupied, without
