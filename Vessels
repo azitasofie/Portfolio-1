@@ -1,91 +1,110 @@
-//The Main class is gathering the data made by the abstract class and inherited classes of it.
-public class Main {
-    public static void main(String[] args) {
-        Container containerVessel = new Container(50, "Container Vessel");
-        Tanker tankerVessel = new Tanker(4, "Tanker Vessel");
-        RoRo roRoVessel = new RoRo(8, "RoRo Vessel");
+abstract class Vessel {
+    protected String name; 
+    protected int capacity;
 
-        containerVessel.loadingCargo(50, "TEU");
-        containerVessel.loadingFraction();
-        tankerVessel.loadingCargo("4");
-        tankerVessel.loadingFraction();
-        roRoVessel.loadingCargo("car");
-        roRoVessel.loadingFraction();
-    }
-    //Abstract class "Vessels" start. Abstract because it's only function is to be inherited from.
-    abstract static class Vessels {
-        int cargo;
-        String nameOfVessel;
-
-        public Vessels(int cargo, String nameOfVessel) {
-            this.nameOfVessel = nameOfVessel;
-            this.cargo = cargo;
-        }
-
-        abstract float loadingFraction();
+    // Constructor for Vessel. 
+    public Vessel(String name, int capacity) {
+        this.name = name; 
+        this.capacity = capacity; 
     }
 
-    //Container class starts, inherited from abstract class "Vessels"
+    // These are abstract methods. Any class that extends Vessel
+    // needs to provide these methods.
+    public abstract void loadingCargo(int amount, String type);
+    public abstract float loadingFraction();
+}
 
-    static class Container extends Vessels {
-        float numberOfContainers;
-        float fraction;
+class Container extends Vessel {
+    private int containersLoaded; // Tracks how many containers are currently loaded.
 
-        public Container(int cargo, String nameOfVessel) {
-            super(cargo, nameOfVessel);
-        }
+    // Constructor for a Container
+    public Container(String name, int capacity) {
+        super(name, capacity);
+    }
 
-        public void loadingCargo(int containers, String letters) {
-            this.numberOfContainers = containers;
-
-        }
-
-        // calculate percentage filled (x/y)*100
-        public float loadingFraction() {
-            this.fraction = (this.numberOfContainers / cargo) * 100;
-            return fraction;
+    // Method to load containers. Only loads if the unit type is "TEU".
+    public void loadingCargo(int containers, String unit) {
+        if ("TEU".equals(unit)) { 
+            this.containersLoaded = Math.min(containers, this.capacity);
         }
     }
-    //Tanker class starts, inherited from abstract class "Vessels"
-    static class Tanker extends Vessels {
-        float fraction;
-        float numberOfCompartments = 10;
-        float filledCompartmentsFloat = 4;
 
-        public Tanker(int cargo, String nameOfVessel) {
-            super(cargo, nameOfVessel);
-        }
+    // Calculates what fraction of the vessel's capacity is used.
+    public float loadingFraction() {
+        return (float) this.containersLoaded / this.capacity; 
+    }
+}
 
-        void loadingCargo(String filledCompartmentsString) {
-            filledCompartmentsString = filledCompartmentsFloat + "";
+class Tanker extends Vessel {
+    private float[] compartments; // An array to hold how much each compartment is filled.
+    private int capacityPerCompartment; // The capacity of each compartment.
 
-        }
+    // Constructor for a Tanker.
+    public Tanker(String name, int capacityPerCompartment) {
+        super(name, capacityPerCompartment * 10); 
+        compartments = new float[10]; // Initializes the compartments array with 10 spots.
+        this.capacityPerCompartment = capacityPerCompartment; // Sets the individual compartment capacity.
+    }
 
-        public float loadingFraction() {
-            this.fraction = (this.numberOfCompartments / cargo) * 100;
-            return fraction;
+    // Tries to load cargo into a specified compartment.
+    public void loadingCargo(int amount, String compartment) {
+        try {
+            // Tries to convert the string compartment number into an integer.
+            int compartmentNumber = Integer.parseInt(compartment);
+            // Checks if the number is within the range of compartments.
+            if (compartmentNumber >= 1 && compartmentNumber <= compartments.length) {
+                // Loads cargo into the compartment, but not more than its capacity.
+                compartments[compartmentNumber - 1] = Math.min(amount, capacityPerCompartment);
+            } else {
+                // If the compartment number is out of range, prints an error message.
+                System.out.println("Error: Compartment number must be between 1 and " + compartments.length);
+            }
+        } catch (NumberFormatException e) {
+            // If the string can't be converted to an integer, prints an error message.
+            System.out.println("Error: Compartment number must be an integer.");
         }
     }
-    //RoRo class starts, inherited from abstract class "Vessels"
-    static class RoRo extends Vessels {
-        float laneMeters = 50;
-        float fraction;
-        String car = "car";
 
-        public RoRo(int cargo, String nameOfVessel) {
-            super(cargo, nameOfVessel);
+    // Calculates the total fraction of the tanker's capacity that's filled.
+    public float loadingFraction() {
+        float total = 0;
+        for (int i = 0; i < compartments.length; i++) {
+            total += compartments[i]; // Adds up the filled capacity of each compartment.
+        }
+        return total / this.capacity; // Divides the total filled capacity by the tanker's total capacity.
+    }
+}
+
+class RoRo extends Vessel {
+    private int laneMetersOccupied; // Keeps track of how many lane meters are occupied.
+
+    // Constructor for RoRo. Sets the lane meters occupied to 0 initially.
+    public RoRo(String name, int totalLaneMeters) {
+        super(name, totalLaneMeters);
+        laneMetersOccupied = 0; // Starts with no lane meters occupied.
+    }
+
+    // Loads vehicles onto the RoRo vessel.
+    public void loadingCargo(int vehicleCount, String type) {
+        int vehicleLength;
+        // Checks the type of vehicle and sets the length accordingly.
+        if ("car".equals(type)) {
+            vehicleLength = 8; // A car occupies 8 meters of lane space.
+        } else if ("truck".equals(type)) {
+            vehicleLength = 30; // A truck occupies 30 meters of lane space.
+        } else {
+            vehicleLength = 0; // If the type is unknown, it assumes no space is occupied.
         }
 
-        public void loadingCargo(String typeVehicle) {
-            this.car = typeVehicle;
+        // Adds the total length of vehicles being loaded to laneMetersOccupied, without
+        // exceeding capacity.
+        this.laneMetersOccupied = Math.min(this.laneMetersOccupied + (vehicleCount * vehicleLength), this.capacity);
+    }
 
-        }
-
-        public float loadingFraction() {
-            this.fraction = (this.laneMeters / cargo) * 100;
-            return fraction;
-        }
-
+    // Calculates the fraction of lane meters occupied compared to the vessel's
+    // total capacity.
+    public float loadingFraction() {
+        return (float) this.laneMetersOccupied / this.capacity; // The occupied lane meters divided by total capacity.
     }
 }
 
