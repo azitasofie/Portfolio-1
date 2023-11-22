@@ -42,11 +42,11 @@ class Tanker extends Vessel {
     // Constructor for a Tanker.
     public Tanker(String name, int capacityPerCompartment) {
         super(name, capacityPerCompartment * 10); 
-        compartments = new float[10]; // Initializes the compartments array with 10 spots.
-        this.capacityPerCompartment = capacityPerCompartment; // Sets the individual compartment capacity.
+        compartments = new float[10]; 
+        this.capacityPerCompartment = capacityPerCompartment; // Sets the compartment capacity.
     }
 
-    // Tries to load cargo into a specified compartment.
+    // Tries to load cargo into a compartment.
     public void loadingCargo(int amount, String compartment) {
         try {
             // Tries to convert the string compartment number into an integer.
@@ -63,13 +63,13 @@ class Tanker extends Vessel {
         }
     }
 
-    // Calculates the total fraction of the tanker's capacity that's filled.
+    // Calculates the fraction of the tanker's capacity that's filled.
     public float loadingFraction() {
         float total = 0;
         for (int i = 0; i < compartments.length; i++) {
             total += compartments[i];
         }
-        return total / this.capacity; // Divides the total filled capacity by the tanker's total capacity.
+        return total / this.capacity; // Divides the filled capacity by the tanker's total capacity.
     }
 }
 
@@ -85,22 +85,20 @@ class RoRo extends Vessel {
     // Loads vehicles onto the RoRo vessel.
     public void loadingCargo(int vehicleCount, String type) {
         int vehicleLength;
-        // Checks the type of vehicle and sets the length accordingly.
+        // Checks the type of vehicle and sets the length.
         if ("car".equals(type)) {
             vehicleLength = 8; // A car occupies 8 meters of lane space.
         } else if ("truck".equals(type)) {
             vehicleLength = 30; // A truck occupies 30 meters of lane space.
         } else {
-            vehicleLength = 0; // If the type is unknown, it assumes that the vehicle length is equal to zero.
+            vehicleLength = 0; // If the type is unknown, it thinks that the vehicle length is equal to zero.
         }
 
-        // Adds the total length of vehicles being loaded to laneMetersOccupied, without
-        // exceeding capacity.
+        // Adds the total length of vehicles being loaded to laneMetersOccupied, without exceeding capacity.
         this.laneMetersOccupied = Math.min(this.laneMetersOccupied + (vehicleCount * vehicleLength), this.capacity);
     }
 
-    // Calculates the fraction of lane meters occupied compared to the vessel's
-    // total capacity.
+    // Calculates the fraction of lane meters occupied compared to the vessel's total capacity.
     public float loadingFraction() {
         return (float) this.laneMetersOccupied / this.capacity; // The occupied lane meters divided by total capacity.
     }
